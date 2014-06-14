@@ -1,0 +1,54 @@
+{
+  "name": "phroto",
+  "version": "0.0.0",
+  "description": "3D Frodo gallery",
+  "main": "app.js",
+  "dependencies": {
+    "connect-livereload": "~0.4.0",
+    "express": "~4.4.3",
+    "gulp": "~3.8.0",
+    "gulp-autoprefixer": "~0.0.7",
+    "gulp-compass": "~1.1.9",
+    "gulp-jade": "~0.5.0",
+    "gulp-livereload": "~2.1.0",
+    "gulp-plumber": "~0.6.3",
+    "node-notifier": "~3.0.4",
+    "tiny-lr": "~0.0.7",
+    "static-favicon": "~2.0.0-alpha",
+    "body-parser": "~1.3.1",
+    "cookie-parser": "~1.1.0",
+    "jade": "~1.3.1"
+  },
+  "devDependencies": {
+    "connect-livereload": "~0.4.0",
+    "node-notifier": "~3.0.4",
+    "tiny-lr": "0.0.7",
+    "express": "~4.4.3",
+    "gulp-plumber": "~0.6.3",
+    "gulp-livereload": "~2.1.0",
+    "gulp-autoprefixer": "0.0.7",
+    "gulp-compass": "~1.1.9",
+    "gulp": "~3.8.0",
+    "gulp-huxley": "~0.1.0",
+    "chai": "~1.9.1",
+    "gulp-nodemon": "~1.0.4"
+  },
+  "scripts": {
+    "test": "mocha -w -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sudokrew/phroto.git"
+  },
+  "keywords": [
+    "famous",
+    "photo",
+    "gallery"
+  ],
+  "author": "",
+  "license": "None",
+  "bugs": {
+    "url": "https://github.com/sudokrew/phroto/issues"
+  },
+  "homepage": "https://github.com/sudokrew/phroto"
+}

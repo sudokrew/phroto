@@ -1,6 +1,6 @@
 var gulp = require('gulp'),
   compass = require('gulp-compass'),
-  jade = require('gulp-jade'),
+  nodemon = require('gulp-nodemon'),
   notify = require('node-notifier'),
   refresh = require('gulp-livereload'),
   lrserver = require('tiny-lr')(),
@@ -8,6 +8,7 @@ var gulp = require('gulp'),
   livereload = require('connect-livereload'),
   plumber = require('gulp-plumber'),
   prefix = require('gulp-autoprefixer'),
+  huxley = require('gulp-huxley'),
   livereloadport = 35729,
   serverport = 3000;
 
@@ -16,23 +17,11 @@ function handleError(err) {
   this.emit('end');
 }
 
-//We only configure the server here and start it only when running the watch task
-var server = express();
-//Add livereload middleware before static-middleware
-server.use(livereload({
-  port: livereloadport
-}));
-server.use(express.static('./dist'));
-
-gulp.task('templates', function() {
-  var YOUR_LOCALS = {};
-
-  gulp.src('./templates/*.jade')
-    .pipe(jade({
-      locals: YOUR_LOCALS
-    }))
-    .pipe(gulp.dest('./dist'))
-    .pipe(refresh(lrserver));
+gulp.task('nodemon', function () {
+  nodemon({
+    options: "-e js,json",
+    script: "app.js"
+  });
 });
 
 //Task for sass using libsass through gulp-sass
@@ -41,11 +30,11 @@ gulp.task('sass', function(){
     .pipe(plumber())
     .pipe(compass({
       config_file: './config.rb',
-      css: 'dist/css',
+      css: 'public/css',
       sass: 'sass'
     }))
     .pipe(prefix())
-    .pipe(gulp.dest('dist/css'))
+    .pipe(gulp.dest('public/css'))
     .pipe(refresh(lrserver))
     .on('error', function() {
       handleError(err);
@@ -55,39 +44,35 @@ gulp.task('sass', function(){
 gulp.task('images', function () {
   gulp.src('./images/*')
     .pipe(refresh(lrserver))
-    .pipe(gulp.dest('./dist/images/'));
+    .pipe(gulp.dest('./public/images/'));
 });
 
 gulp.task('js', function () {
   gulp.src('./js/**/*.js')
     .pipe(refresh(lrserver))
-    .pipe(gulp.dest('./dist/js/'));
+    .pipe(gulp.dest('./public/js/'));
 });
 
-// Copy bower components into dist/js/libs
+// Copy bower components into public/js/libs
 gulp.task('copy', function () {
-  gulp.src([
-    './bower_components/jquery/dist/jquery.min.js',
-    './bower_components/foundation/js/foundation.min.js'
-  ]).pipe(gulp.dest('./dist/js/libs'));
+  gulp.src('')
+    .pipe(gulp.dest('./public/js/lib'));
 });
 
 gulp.task('watch', function() {
   gulp.watch('sass/**/*.scss', ['sass']);
   gulp.watch('images/*', ['images']);
   gulp.watch('js/**/*.js', ['js']);
-  gulp.watch('templates/**/*.jade', ['templates']);
+});
+
+gulp.task('huxley', function() {
+  gulp.src('./test/**/Huxleyfile.json')
+    .pipe( huxley({
+      action: 'compare'
+    }));
 });
 
 //Convenience task for running a one-off build
-gulp.task('build', ['templates', 'sass', 'js', 'images', 'copy']);
+gulp.task('build', ['sass', 'js', 'images', 'copy']);
 
-gulp.task('serve', function() {
-  //Set up your static fileserver, which serves files in the build dir
-  server.listen(serverport);
-
-  //Set up your livereload server
-  lrserver.listen(livereloadport);
-});
-
-gulp.task('default', ['build', 'serve', 'watch']);
+gulp.task('default', ['build', 'nodemon', 'watch']);
